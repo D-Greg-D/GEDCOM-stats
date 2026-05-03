@@ -1,4 +1,4 @@
-from src.tree import Tree
+from src.tree import Tree, Person, Family
 from datetime import date, datetime
 
 class GEDCOM_Parser:
@@ -72,7 +72,7 @@ class GEDCOM_Parser:
                 break
             elif self.type[0] == "@" and self.type[-1] == "@":
                 if self.payload == "indi":
-                    person = tree.add_person(self.type)
+                    person = tree.add(Person(self.type))
 
                     while self.line_parser():
                         if self.level < 1:
@@ -94,7 +94,12 @@ class GEDCOM_Parser:
                                 else:
                                     self.print_debug_information("odd_struct")
                         elif self.type == "sex":
-                            person.gender = self.payload
+                            if self.payload == "m":
+                                person.gender = "male"
+                            elif self.payload == "f":
+                                person.gender = "female"
+                            else:
+                                person.gender = "other"
                         elif self.type == "famc":
                             person.origin_family = self.payload
                         elif self.type == "fams":
@@ -135,7 +140,7 @@ class GEDCOM_Parser:
                         else:
                             self.print_debug_information("odd_struct")
                 elif self.payload == "fam":
-                    family = tree.add_family(self.type)
+                    family = tree.add(Family(self.type))
 
                     while self.line_parser():
                         if self.level < 1:

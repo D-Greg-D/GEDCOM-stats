@@ -3,8 +3,8 @@
 Parses GEDCOM files and outputs some stats
 
 # Project is yet to be finished, it isn't even in the Alpha stage.
-## It already does a few cool things but is very limited and the instructions on how to use it are not done yet too.
-## Also it is partially in English (developer information and config) and partially in Russian (results). In future it will be fully available in both languages.
+It already does a few cool things but is very limited and the instructions on how to use it are not done yet too.
+Also it is partially in English (developer information and config) and partially in Russian (results). In future it will be fully available in both languages.
 
 ## How to install
 

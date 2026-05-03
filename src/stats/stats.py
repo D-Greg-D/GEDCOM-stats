@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 class Stats:
     def __init__(self, config, tree):
         self.config = config
@@ -6,6 +8,7 @@ class Stats:
     def go(self):
         self.general()
         self.death_reason_test()
+        self.life_expectancy()
 
     def general(self):
         people_number = 0
@@ -14,7 +17,7 @@ class Stats:
         for record in self.tree.records.values():
             if record.type == "person":
                 people_number += 1
-                if record.link.birth_date == None:
+                if record.birth_date == None:
                     people_birth_dates_number += 1
             elif record.type == "family":
                 families_number += 1
@@ -27,12 +30,11 @@ class Stats:
             if stat["objects"] == "people":
                 for record in self.tree.records.values():
                     if record.type == "person":
-                        person = record.link
                         if stat["groups"] == "gender":
-                            if person.gender == "m":
-                                result["m"].append(person.death_reason != None)
-                            elif person.gender == "f":
-                                result["f"].append(person.death_reason != None)
+                            if record.gender == "male":
+                                result["m"].append(record.death_reason != None)
+                            elif record.gender == "female":
+                                result["f"].append(record.death_reason != None)
 
             for (group, value) in result.items():
                 new_value = 0
@@ -44,4 +46,14 @@ class Stats:
             print("Количество людей по гендерам с указанной причиной смерти:", result)
 
     def life_expectancy(self):
-        pass
+        people = self.tree.get_corresponding_people([["gender", "male"], ["birth_date", datetime.strptime("1917", "%Y"), datetime.now()], ["not alive"]])
+        print(len(people))
+        avg_life = 0
+        all_lives = []
+        for person in people:
+            all_lives.append((person.death_date - person.birth_date).days)
+            avg_life += (person.death_date - person.birth_date).days
+        avg_life /= len(people)
+        median_life = (all_lives[(len(all_lives) - 1) // 2] + all_lives[len(all_lives) // 2]) / 2
+        print("Средняя продолжительность жизни:", avg_life / 365.24)
+        print("Медианная продолжительность жизни:", median_life / 365.24)
